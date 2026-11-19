@@ -1,0 +1,350 @@
+---
+import { getImage, Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Logo from '../components/Logo.astro';
+import Gallery from '../components/Gallery.astro';
+import Lightbox from '../components/Lightbox.astro';
+import Icon from '../components/Icon.astro';
+import { portfolio, thesis } from '../data/portfolio';
+import intro from '../assets/images/intro.jpg';
+import banner from '../assets/images/banner.jpg';
+import profile from '../assets/images/profile.jpg';
+
+const introBg = await getImage({ src: intro, format: 'webp' });
+const bannerBg = await getImage({ src: banner, format: 'webp' });
+
+const skills = [
+  {
+    heading: '2D / 3D / Motion',
+    icons: ['photoshop', 'illustrator', 'indesign', 'maya', 'mudbox', 'cinema4d', 'aftereffects', 'premiere', 'flash'],
+    names: 'Photoshop / Illustrator / InDesign / Maya / Mudbox / Cinema4D / After Effects / Premiere Pro / Flash',
+  },
+  {
+    heading: 'Web / Interactivity',
+    icons: ['unity', 'csharp', 'html5', 'css3', 'javascript', 'jquery', 'react', 'bootstrap'],
+    names: 'Unity3D / C# / HTML5 / CSS3 / JavaScript / jQuery / React / Bootstrap',
+  },
+];
+
+const social = [
+  { icon: 'envelope', label: 'Email', href: 'mailto:yaojiazhang@gmail.com?subject=Hello' },
+  { icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/jessicazhangonline/' },
+  { icon: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/miyjz/' },
+];
+
+const footerLinks = [
+  ['#top', 'Home'],
+  ['#about', 'About'],
+  ['#portfolio', 'Portfolio'],
+  ['#skills', 'Skills'],
+  ['#contact', 'Contact'],
+];
+---
+
+<Base>
+  <Nav />
+
+  <header class="hero" style={`--bg: url(${introBg.src})`}>
+    <h1><Logo /></h1>
+    <a href="#portfolio" class="button">View My Portfolio</a>
+  </header>
+
+  <main>
+    <section id="portfolio">
+      <div class="wrapper">
+        <h2>Portfolio</h2>
+        <div class="tabs" role="tablist">
+          {
+            portfolio.map((group, i) => (
+              <button role="tab" id={`tab-${group.id}`} aria-controls={`panel-${group.id}`} aria-selected={String(i === 0)}>
+                {group.label}
+              </button>
+            ))
+          }
+        </div>
+        {
+          portfolio.map((group, i) => (
+            <div role="tabpanel" id={`panel-${group.id}`} aria-labelledby={`tab-${group.id}`} hidden={i !== 0}>
+              <Gallery items={group.items} />
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="research" class="tinted">
+      <div class="wrapper">
+        <h2>Master's Research Project</h2>
+        <h3>The Project</h3>
+        <p>
+          ALLRecovery is an interactive mobile application designed to teach patients and their families about acute
+          lymphoblastic leukemia (ALL) and the common treatments. The app includes 3 animations that serve as an
+          introduction to the arcade game, RECOVER. RECOVER is a top-down shooter game where the player uses chemotherapy
+          to destroy leukemia cells.
+        </p>
+        <Gallery items={thesis.animations} />
+
+        <details class="details">
+          <summary class="button"></summary>
+          <h3>The Purpose</h3>
+          <p>
+            Acute lymphoblastic leukemia (ALL) is the most common cancer in children. Currently, an easily accessible
+            learning aid for a younger audience is not available. Also, the 5-year survival rate for childhood ALL is more
+            than 90% and still increasing, therefore the information given to patients and their family members should be
+            more hopeful. Presenting the concept of ALL as a cartoon and a game is a friendly way to explain the illness and
+            can help cope with fear and anxiety. Using the mobile application platform allows easier access to the
+            material.
+          </p>
+          <h3>The Objectives</h3>
+          <p>
+            The primary objective of ALLRecovery is to provide an engaging and interactive method for acute lymphoblastic
+            leukemia education. After viewing the animations and playing the game, the audience will be able to explain the
+            concept of acute lymphoblastic leukemia and the chemotherapy processes involved with the treatment of ALL. The
+            secondary objective of ALLRecovery is to implement realistic representation of biological and cellular
+            structures.
+          </p>
+          <h3>The Planning</h3>
+          <h4>Animation Storyboards</h4>
+          <Gallery items={thesis.storyboards} />
+          <h4>Animatics and Application Interface Design</h4>
+          <Gallery items={thesis.design} />
+        </details>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="wrapper">
+        <h2>Skills</h2>
+        {
+          skills.map((group) => (
+            <div class="skills">
+              <h3>{group.heading}</h3>
+              <div class="skill-icons">
+                {group.icons.map((name) => <Icon name={name} />)}
+              </div>
+              <h4>{group.names}</h4>
+            </div>
+          ))
+        }
+        <div class="skills">
+          <h3>Oh yeah</h3>
+          I'm also a web designer and <a href="http://codedbyjessica.com/">developer</a>.
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="tinted">
+      <div class="wrapper">
+        <h2>About</h2>
+        <div class="about">
+          <div>
+            <h3>Thank you for visiting</h3>
+            <p>My name is Jessica, I am a Canadian Medical Illustrator based in Toronto, ON.</p>
+            <p>
+              Growing up, I wanted to be a scientist, an artist and a teacher. Little did I know that I would be able to
+              combine the three into one occupation. My passion for the visual arts is not only driven by its aesthetic
+              nature but because it is a powerful tool for communication. I wish to further explore the field of
+              biomedical visualization and expand my own skills through modern technology to create an even more
+              comprehensive approach to learning.
+            </p>
+          </div>
+          <Image class="portrait" src={profile} alt="Jessica Zhang" width={400} />
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style={`--bg: url(${bannerBg.src})`}>
+      <div class="wrapper contact">
+        <h3>Keep in touch!</h3>
+        <a href="mailto:yaojiazhang@gmail.com">yaojiazhang@gmail.com</a>
+        <div class="social">
+            {
+              social.map(({ icon, label, href }) => (
+                <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener">
+                  <Icon name={icon} label={label} />
+                </a>
+              ))
+            }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrapper">
+    <ul>
+      {footerLinks.map(([href, label]) => <li><a href={href}>{label}</a></li>)}
+    </ul>
+    &copy; 2017 Jessica Zhang. All rights reserved.
+  </footer>
+
+  <Lightbox />
+</Base>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+  tabs.forEach((tab) =>
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => {
+        const selected = t === tab;
+        t.setAttribute('aria-selected', String(selected));
+        document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !selected;
+      });
+    }),
+  );
+</script>
+
+<style>
+  .hero,
+  #contact {
+    background: var(--bg) center / cover no-repeat fixed;
+    color: var(--light);
+  }
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .hero h1 {
+    margin: 0;
+    line-height: 0;
+    text-align: center;
+  }
+  .hero .button {
+    color: var(--light);
+  }
+
+  .tinted {
+    background: var(--light);
+  }
+
+  /* Portfolio tabs */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 20px;
+    margin-block: 16px;
+  }
+  [role='tab'] {
+    border: 0;
+    background: none;
+    color: var(--primary);
+    font: 500 1.1rem var(--font-body);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  [role='tab']:hover {
+    color: var(--accent);
+  }
+  [role='tab'][aria-selected='true'] {
+    color: #000;
+  }
+
+  /* Research */
+  .details summary {
+    display: table;
+    margin: 16px auto;
+    list-style: none;
+  }
+  .details summary::-webkit-details-marker {
+    display: none;
+  }
+  .details summary::after {
+    content: 'More details';
+  }
+  .details[open] summary::after {
+    content: 'Less details';
+  }
+
+  /* Skills */
+  .skills {
+    margin: 20px;
+  }
+  .skills h3 {
+    margin-bottom: 16px;
+  }
+  .skill-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px;
+    font-size: 50px;
+    color: var(--primary);
+  }
+
+  /* About */
+  .about {
+    display: grid;
+    grid-template-columns: 7fr 3fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .portrait {
+    width: 100%;
+    border: 1px solid #000;
+  }
+
+  /* Contact */
+  .contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding-block: 40px;
+  }
+  .social {
+    display: flex;
+    gap: 20px;
+    font-size: 30px;
+  }
+  .contact a {
+    color: var(--light);
+  }
+  .contact a:hover {
+    color: var(--accent);
+  }
+
+  footer {
+    padding-block: 20px;
+  }
+  footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (max-width: 620px) {
+    .about {
+      grid-template-columns: 1fr;
+    }
+    .about h3 {
+      text-align: center;
+    }
+    .portrait {
+      width: 60%;
+      justify-self: center;
+      grid-row: 1;
+    }
+    footer,
+    footer ul {
+      text-align: center;
+      justify-content: center;
+    }
+  }
+
+  /* Fixed backgrounds are janky / unsupported on touch devices */
+  @media (hover: none) {
+    .hero,
+    #contact {
+      background-attachment: scroll;
+    }
+  }
+</style>

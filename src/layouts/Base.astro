@@ -1,0 +1,22 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'YJZhang Biomedical Visuals' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Portfolio of Jessica Zhang, a medical illustrator and animator based in Toronto." />
+    <title>{title}</title>
+  </head>
+  <body id="top">
+    <slot />
+  </body>
+</html>

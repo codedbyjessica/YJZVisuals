@@ -1,0 +1,136 @@
+---
+import Icon from './Icon.astro';
+---
+
+<dialog class="lightbox" aria-label="Artwork viewer">
+  <figure>
+    <div class="media"></div>
+    <figcaption><strong></strong> <span></span></figcaption>
+  </figure>
+  <button class="close" aria-label="Close"><Icon name="xmark" /></button>
+  <button class="prev" aria-label="Previous">‹</button>
+  <button class="next" aria-label="Next">›</button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox')!;
+  const media = dialog.querySelector('.media')!;
+  const [title, caption] = dialog.querySelectorAll('figcaption > *');
+  let items: HTMLAnchorElement[] = [];
+  let index = 0;
+
+  function show(i: number) {
+    index = i;
+    const link = items[i];
+    const { video } = link.dataset;
+    media.replaceChildren(
+      video
+        ? Object.assign(document.createElement('iframe'), {
+            src: `https://www.youtube-nocookie.com/embed/${video}?autoplay=1`,
+            title: link.dataset.title,
+            allow: 'autoplay; fullscreen; picture-in-picture',
+            allowFullscreen: true,
+          })
+        : Object.assign(document.createElement('img'), { src: link.href, alt: link.dataset.title }),
+    );
+    title.textContent = link.dataset.title ?? '';
+    caption.textContent = link.dataset.caption ?? '';
+    dialog.classList.toggle('single', items.length < 2);
+  }
+
+  const step = (by: number) => show((index + by + items.length) % items.length);
+
+  document.addEventListener('click', (e) => {
+    const link = (e.target as Element).closest<HTMLAnchorElement>('[data-gallery] a');
+    if (!link || e.metaKey || e.ctrlKey) return;
+    e.preventDefault();
+    items = [...link.closest('[data-gallery]')!.querySelectorAll('a')];
+    show(items.indexOf(link));
+    dialog.showModal();
+  });
+
+  dialog.querySelector('.close')!.addEventListener('click', () => dialog.close());
+  dialog.querySelector('.prev')!.addEventListener('click', () => step(-1));
+  dialog.querySelector('.next')!.addEventListener('click', () => step(1));
+  dialog.addEventListener('click', (e) => e.target === dialog && dialog.close());
+  dialog.addEventListener('close', () => media.replaceChildren());
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+</script>
+
+<style>
+  .lightbox {
+    max-width: min(1100px, 92vw);
+    max-height: 92vh;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+  .lightbox::backdrop {
+    background: rgb(0 0 0 / 0.85);
+  }
+  figure {
+    margin: 0;
+  }
+  .media :global(img) {
+    display: block;
+    max-width: 100%;
+    max-height: 80vh;
+    margin-inline: auto;
+  }
+  .media :global(iframe) {
+    display: block;
+    width: min(1100px, 92vw);
+    aspect-ratio: 16 / 9;
+    max-height: 80vh;
+    border: 0;
+  }
+  figcaption {
+    padding: 10px 0;
+    color: var(--light);
+    text-align: center;
+  }
+  button {
+    position: absolute;
+    border: 0;
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+  button:hover {
+    color: var(--accent);
+  }
+  .close {
+    top: -40px;
+    right: 0;
+    font-size: 1.5rem;
+  }
+  .prev,
+  .next {
+    top: 40%;
+    padding: 10px;
+  }
+  .prev {
+    left: -50px;
+  }
+  .next {
+    right: -50px;
+  }
+  .single .prev,
+  .single .next {
+    display: none;
+  }
+  @media (max-width: 620px) {
+    .prev {
+      left: -10px;
+    }
+    .next {
+      right: -10px;
+    }
+  }
+</style>

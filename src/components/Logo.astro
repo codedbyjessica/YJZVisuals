@@ -1,0 +1,35 @@
+---
+import mark from '../assets/logo-mark.svg';
+---
+
+<svg class="logo" viewBox="0 0 470 90" role="img" aria-label="YJZhang Biomedical Visuals">
+  <image href={mark.src} width="98" height="90" />
+  <text class="name" transform="matrix(0.9 0 0 1 107.5 50.4)">YJZHANG</text>
+  <text class="tagline" transform="matrix(0.9 0 0 1 111.4 83.6)">
+    <tspan class="accent">BIOMEDICAL</tspan><tspan x="221.7"> VISUALS</tspan>
+  </text>
+</svg>
+
+<style>
+  .logo {
+    width: min(470px, 100%);
+    height: auto;
+    margin: 20px;
+    padding: 5px;
+    font-family: var(--font-display);
+    fill: #fff;
+  }
+  .name {
+    font-weight: 300;
+    font-size: 57px;
+    letter-spacing: 20px;
+  }
+  .tagline {
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 7px;
+  }
+  .accent {
+    fill: #accdec;
+  }
+</style>

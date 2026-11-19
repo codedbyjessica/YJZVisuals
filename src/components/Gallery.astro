@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+import type { Work } from '../data/portfolio';
+
+interface Props {
+  items: Work[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="gallery" data-gallery>
+  {
+    items.map((item) => (
+      <a
+        class="item"
+        href={item.video ? `https://youtu.be/${item.video}` : item.image.src}
+        data-video={item.video}
+        data-title={item.title}
+        data-caption={`Created with ${item.caption}`}
+      >
+        <Image src={item.image} alt={item.title} widths={[300, 600]} sizes="(max-width: 480px) 100vw, (max-width: 1000px) 50vw, 25vw" />
+        <span class="description">
+          <strong>{item.title}</strong>
+          Created with {item.caption}
+        </span>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-block: 10px 20px;
+  }
+  .item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--grey);
+  }
+  .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .description {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 12px 15px 18px;
+    color: var(--light);
+    background: rgb(0 0 0 / 0.7);
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .description strong {
+    display: block;
+    margin-bottom: 5px;
+    font-family: var(--font-display);
+  }
+  .item:hover .description,
+  .item:focus-visible .description {
+    opacity: 1;
+  }
+  @media (max-width: 1000px) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
